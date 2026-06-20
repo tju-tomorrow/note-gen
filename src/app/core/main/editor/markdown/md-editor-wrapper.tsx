@@ -183,6 +183,11 @@ export function MdEditor({ tabContentsRef, filePath, isActive }: MdEditorProps) 
       const { activeFilePath: storeActivePath } = useArticleStore.getState()
       if (storeActivePath === filePath) {
         setInitialContent(currentArticle)
+        // Bug fix: Also cache to tabContentsRef so subsequent tab switches
+        // don't trigger an extra disk read.
+        if (tabContentsRef.current) {
+          tabContentsRef.current[filePath] = currentArticle
+        }
         loadedPathsRef.current.add(filePath)
         setIsLoading(false)
         isLoadingRef.current = false
@@ -383,8 +388,11 @@ export function MdEditor({ tabContentsRef, filePath, isActive }: MdEditorProps) 
     )
   }
 
-  // 如果 currentArticle 已经有内容，直接显示（拉取完成）
-  const showContent = (currentArticle && currentArticle.length > 0) || initialContent !== null
+  // Bug fix: Wait for initialContent to be determined before rendering TipTapEditor.
+  // Previously the gate also allowed rendering when currentArticle was set in the store,
+  // but in that race the TipTap editor was created with empty content and the subsequent
+  // initialContent update was ignored (the editor was already marked as initialized).
+  const showContent = initialContent !== null
   if (isLoading && !showContent) {
     return (
       <div className="flex-1 flex items-center justify-center">

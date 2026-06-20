@@ -2916,17 +2916,20 @@ export function TipTapEditor({
 
         if (initialContent) {
           editor.commands.setContent(initialContent || '', { contentType: 'markdown' })
+          // Mark as initialized to allow subsequent content updates
+          isInitializedRef.current = true
+          // Bug fix: Mark editor as ready AFTER content is set
+          // This prevents onUpdate from firing with empty content during init
+          isReadyRef.current = true
+          // Notify mobile editor that editor is ready
+          onReady?.()
+          // Notify parent component about editor instance
+          onEditorReady?.(editor)
+          restoreEditorViewState(currentPath)
         }
-        // Mark as initialized to allow subsequent content updates
-        isInitializedRef.current = true
-        // Bug fix: Mark editor as ready AFTER content is set
-        // This prevents onUpdate from firing with empty content during init
-        isReadyRef.current = true
-        // Notify mobile editor that editor is ready
-        onReady?.()
-        // Notify parent component about editor instance
-        onEditorReady?.(editor)
-        restoreEditorViewState(currentPath)
+        // If initialContent is empty/null, do not mark as initialized yet.
+        // The effect will re-run when initialContent becomes non-empty so the
+        // editor can be populated with the real content instead of staying empty.
       }, 0)
     }
   }, [editor, initialContent, onReady, onEditorReady, activeFilePath, restoreEditorViewState])

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Heading1,
   Heading2,
@@ -28,6 +29,7 @@ import {
   Image as ImageIcon,
   FilePlus,
 } from 'lucide-react'
+/* eslint-enable @typescript-eslint/no-unused-vars */
 import { SuggestionProps } from '@tiptap/suggestion'
 import { type Editor, type Range } from '@tiptap/core'
 import { open } from '@tauri-apps/plugin-dialog'
@@ -224,6 +226,7 @@ async function createMarkdownLinksForFilePaths(paths: string[], currentFilePath:
 }
 
 // 辅助函数: 创建 Mermaid 图表命令
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const createMermaidCommand = (
   type: 'flowchart' | 'sequence' | 'gantt' | 'classDiagram' | 'stateDiagram' | 'pie' | 'er' | 'journey'
 ) => ({

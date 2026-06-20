@@ -157,6 +157,7 @@ function MermaidDiagramView({ node, updateAttributes }: ReactNodeViewProps) {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const getLabel = (key: string) => {
     return t(`diagramTypes.${key}`)
   }
